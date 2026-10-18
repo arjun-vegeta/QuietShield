@@ -1,0 +1,11 @@
+:root { --bg: #fff; --fg: #1d1f25; --muted: #6b7080; --accent: #fb542b; color-scheme: light dark; }
+@media (prefers-color-scheme: dark) { :root { --bg: #1e2029; --fg: #f0f1f5; --muted: #a0a5b2; } }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 13px/1.4 system-ui, sans-serif; width: 260px; }
+main { padding: 14px 16px; }
+h1 { font-size: 15px; margin: 0 0 10px; }
+#host { color: var(--muted); font-weight: 400; display: block; font-size: 12px; overflow: hidden; text-overflow: ellipsis; }
+.row { display: flex; gap: 8px; align-items: center; padding: 3px 0; }
+fieldset { border: 1px solid color-mix(in srgb, var(--muted) 40%, transparent); border-radius: 6px; margin: 10px 0; }
+input { accent-color: var(--accent); }
+.count { font-size: 12px; } #count { font-weight: 600; color: var(--accent); }
+.note { color: var(--muted); font-size: 11px; margin: 4px 0 0; }

@@ -1,0 +1,15 @@
+<!doctype html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="popup.css">
+<main>
+  <h1>QuietShield <span id="host"></span></h1>
+  <label class="row"><input type="checkbox" id="site"> Shields up for this site</label>
+  <fieldset>
+    <legend>Trackers &amp; ads blocking</legend>
+    <label class="row"><input type="radio" name="mode" value="standard"> Standard</label>
+    <label class="row"><input type="radio" name="mode" value="aggressive"> Aggressive</label>
+  </fieldset>
+  <p class="count"><span id="count">0</span> blocked on this tab</p>
+  <p class="note">Changes apply on reload.</p>
+</main>
+<script src="popup.js" type="module"></script>

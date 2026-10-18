@@ -1,0 +1,29 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Shields cosmetic parity test</title>
+<h1>Cosmetic parity test</h1>
+<!-- Generic class rule (default engine), subtree has a THIRD-party image: Brave Standard keeps it hidden -->
+<div id="t1" class="aff-content-col"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg" width="50" height="50"></div>
+<!-- Same rule, subtree has no remote resources and short text: Brave Standard UNHIDES (treated as 1p) -->
+<div id="t2" class="aff-content-col">Short label</div>
+<!-- Generic id rule with third-party iframe-ish content -->
+<div id="bt-ads"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg" width="50" height="50"></div>
+<!-- Known 3p ad id prefix: always stays hidden -->
+<div id="t4" data-ad-name="x"><div id="div-gpt-ad-123">gpt</div></div>
+<!-- Misc generic (attribute) rule with significant text: unhidden as text content in Standard -->
+<div id="t5" data-ad-width="300">This is a long paragraph of real first party article text that should not be hidden by Brave.</div>
+<!-- Additional engine (cookie list) generic: always force-hidden -->
+<div id="t6" class="cookie-banner toast">We use cookies</div>
+<GDPR-NOTICE id="t7">gdpr</GDPR-NOTICE>
+<div id="dyn"></div>
+<script>
+setTimeout(() => {
+  const d = document.createElement('div'); d.id = 't8'; d.className = 'aff-inner-col';
+  d.innerHTML = '<img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg" width="50" height="50">';
+  document.getElementById('dyn').appendChild(d)
+}, 1500)
+window.shieldsReport = () => Object.fromEntries(['t1','t2','bt-ads','t4','t5','t6','t7','t8'].map(id => {
+  const el = document.getElementById(id); if (!el) return [id, 'missing']
+  return [id, getComputedStyle(el).display === 'none' ? 'hidden' : 'shown']
+}))
+</script>

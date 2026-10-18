@@ -1,0 +1,64 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Ad-block detection techniques</title>
+<h1>Detection test</h1>
+<div id="bait" class="adsbox ad-banner textads banner-ads pub_300x250" style="width:300px;height:10px;position:absolute;left:-999px">&nbsp;</div>
+<script>
+const baselineSheets = document.styleSheets.length
+window.__results = {}
+const R = window.__results
+const rec = (k, v) => { R[k] = v }
+
+// 1. Classic bait element (FuckAdBlock / BlockAdBlock style)
+setTimeout(() => {
+  const b = document.getElementById('bait')
+  const cs = getComputedStyle(b)
+  rec('baitElementHidden', b.offsetHeight === 0 || cs.display === 'none' || cs.visibility === 'hidden')
+}, 1500)
+
+// 2. Script bait: adsbygoogle.js load error / global
+const s = document.createElement('script')
+s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'
+s.onerror = () => rec('adsbygoogleScript', 'error')
+s.onload = () => rec('adsbygoogleScript', 'loaded')
+document.head.appendChild(s)
+
+// 3. GPT: blocked, real, or stub?
+const g = document.createElement('script')
+g.src = 'https://securepubads.g.doubleclick.net/tag/js/gpt.js'
+g.onerror = () => rec('gpt', 'error')
+g.onload = () => rec('gpt', 'loaded:' + (typeof googletag === 'object' && typeof googletag.pubads === 'function' ? 'api' : 'noapi'))
+document.head.appendChild(g)
+
+// 4. fetch/XHR bait
+fetch('https://securepubads.g.doubleclick.net/pagead/ads?x=1', { mode: 'no-cors' })
+  .then(() => rec('fetchBait', 'ok'), (e) => rec('fetchBait', 'rejected:' + e.name))
+
+// 5. Resource timing: do redirected/stub resources show up oddly?
+setTimeout(() => {
+  const entries = performance.getEntriesByType('resource')
+  rec('extensionUrlsInResourceTiming', entries.filter(e => e.name.startsWith('chrome-extension:')).length)
+  const gptEntry = entries.find(e => e.name.includes('gpt.js'))
+  rec('gptTiming', gptEntry ? { transferSize: gptEntry.transferSize, decodedBodySize: gptEntry.decodedBodySize, initiator: gptEntry.initiatorType, responseStatus: gptEntry.responseStatus } : null)
+}, 4000)
+
+// 6. Injected styles visible to the page
+setTimeout(() => {
+  rec('adoptedStyleSheets', document.adoptedStyleSheets.length)
+  rec('extraStyleSheets', document.styleSheets.length - baselineSheets)
+  rec('styleOrScriptNodesAdded', document.querySelectorAll('style,script:not([src])').length)
+}, 4000)
+
+// 7. Native function integrity (scriptlets that patch globals)
+const nativeLike = (f) => /\{\s*\[native code\]\s*\}$/.test(Function.prototype.toString.call(f))
+setTimeout(() => {
+  rec('patchedNatives', ['fetch', 'setTimeout', 'setInterval', 'addEventListener', 'XMLHttpRequest', 'eval', 'Function'].filter(n => {
+    const f = n === 'addEventListener' ? EventTarget.prototype.addEventListener : window[n]
+    return typeof f === 'function' && !nativeLike(f)
+  }))
+}, 4000)
+
+// 8. Probe for extension web-accessible resources by static ID path (pre-use_dynamic_url leak)
+rec('done', false)
+setTimeout(() => rec('done', true), 4500)
+</script>

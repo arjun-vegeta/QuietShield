@@ -1,0 +1,9 @@
+data/
+compiler/target/
+extension/build/
+node_modules/
+*.log
+tests/out/
+engine-wasm/target/
+/vendor/
+extension/_metadata/
