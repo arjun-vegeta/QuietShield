@@ -27,7 +27,7 @@
     --shadow: 0 1px 2px rgba(14, 16, 32, .04), 0 12px 32px -12px rgba(14, 16, 32, .12);
   }
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; overflow-x: clip; }
   body {
     margin: 0;
     background: var(--bg);
@@ -73,9 +73,9 @@
   .meta { margin-top: 18px; font-size: 13px; color: var(--ink-3); }
 
   /* Hero visual: popup mock */
-  .visual { position: relative; display: grid; place-items: center; min-height: 420px; }
+  .visual { position: relative; display: grid; place-items: center; min-height: 420px; overflow-x: clip; }
   .visual .halo { position: absolute; width: 340px; height: 340px; border-radius: 50%; background: radial-gradient(circle, rgba(75, 92, 240, .18), transparent 65%); }
-  .popup { position: relative; width: 300px; background: rgba(255, 255, 255, .86); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid rgba(255, 255, 255, .9); border-radius: 22px; box-shadow: 0 30px 60px -20px rgba(14, 16, 32, .25), 0 0 0 1px var(--line); padding: 22px; }
+  .popup { position: relative; width: min(300px, 100%); background: rgba(255, 255, 255, .86); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid rgba(255, 255, 255, .9); border-radius: 22px; box-shadow: 0 30px 60px -20px rgba(14, 16, 32, .25), 0 0 0 1px var(--line); padding: 22px; }
   .popup-head { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
   .popup-head img { width: 38px; height: 38px; }
   .popup-head div { line-height: 1.25; }
@@ -122,7 +122,7 @@
   .step .num { font-weight: 300; font-size: 56px; line-height: 1; letter-spacing: -.05em; color: var(--accent); opacity: .9; }
   .step h3 { font-weight: 500; font-size: 21px; letter-spacing: -.015em; margin: 18px 0 10px; }
   .step p { margin: 0 0 10px; color: var(--ink-2); font-size: 15.5px; }
-  .copy { display: inline-flex; align-items: center; gap: 4px; margin: 6px 0 12px; padding: 5px 5px 5px 16px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); font: 400 14.5px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink); }
+  .copy { max-width: 100%; overflow-x: auto; display: inline-flex; align-items: center; gap: 4px; margin: 6px 0 12px; padding: 5px 5px 5px 16px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); font: 400 14.5px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink); }
   .copy button { font: 500 13px Manrope, sans-serif; border: 0; border-radius: 999px; padding: 7px 14px; margin-left: 8px; background: var(--ink); color: #fff; cursor: pointer; transition: background .2s; }
   .copy button:hover { background: var(--accent); }
   .window { border-radius: 14px; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 24px 48px -24px rgba(14, 16, 32, .22); overflow: hidden; }
@@ -167,21 +167,118 @@
   }
 
   /* Responsive */
+  @media (max-width: 1024px) {
+    body { font-size: 16px; }
+    .hero { gap: 40px; padding: 40px 0 72px; }
+    h1 { font-size: clamp(40px, 6vw, 60px); }
+    .lede { font-size: 17px; }
+    .stat { padding: 24px 26px; }
+    .stat b { font-size: 34px; }
+    section { padding-top: 88px; }
+    h2 { font-size: clamp(30px, 4vw, 40px); }
+    .sub { font-size: 16.5px; }
+    .features { gap: 16px; margin-top: 36px; }
+    .feature { padding: 26px; }
+    .feature h3 { font-size: 17px; }
+    .feature p, .step p, details p { font-size: 15px; }
+    .steps { gap: 16px; margin-top: 36px; }
+    .step { padding: 28px; gap: 32px; }
+    .step .num { font-size: 46px; }
+    .step h3 { font-size: 19px; }
+    .closing { margin-top: 88px; padding: 52px 32px; }
+  }
   @media (max-width: 900px) {
     .hero { grid-template-columns: 1fr; gap: 24px; padding: 32px 0 64px; }
-    .visual { min-height: 380px; }
+    .visual { min-height: 360px; }
+    .chip.a { left: 6%; top: 10px; }
+    .chip.b { right: 6%; bottom: 18px; }
     .step { grid-template-columns: 1fr; gap: 24px; padding: 28px; }
     .window.narrow { margin: 0; }
   }
   @media (max-width: 640px) {
+    body { font-size: 15px; }
     .wrap { padding: 0 16px; }
+    nav { padding: 18px 0; }
+    .brand { font-size: 15px; }
+    .brand img { width: 26px; height: 26px; }
     .nav-links { display: none; }
-    .features { grid-template-columns: 1fr; }
-    .stats { grid-template-columns: 1fr; }
-    .stat + .stat { border-left: 0; border-top: 1px solid var(--line); }
-    section { padding-top: 80px; }
+
+    .hero { padding: 20px 0 48px; gap: 12px; }
+    .pill { font-size: 12px; padding: 5px 12px 5px 6px; }
+    .pill .dot { width: 18px; height: 18px; }
+    h1 { font-size: 40px; margin: 18px 0 14px; }
+    .lede { font-size: 15.5px; margin-bottom: 26px; }
+    .btn { padding: 12px 20px; font-size: 15px; gap: 8px; }
+    .btn svg { width: 16px; height: 16px; }
+    .link { font-size: 14px; }
+    .meta { font-size: 12px; margin-top: 14px; }
+
+    .visual { min-height: 300px; }
+    .visual .halo { width: 260px; height: 260px; }
+    .popup { width: min(260px, 100%); padding: 16px; border-radius: 18px; }
+    .popup-head { gap: 10px; margin-bottom: 12px; font-size: 14px; }
+    .popup-head img { width: 30px; height: 30px; }
+    .popup-head small { font-size: 12px; }
+    .row { padding: 9px 0; font-size: 13px; }
+    .switch { width: 30px; height: 17px; }
+    .switch::after { width: 13px; height: 13px; }
+    .seg { font-size: 12px; }
+    .seg span { padding: 3px 8px; }
+    .count b { font-size: 26px; }
+    .count span { font-size: 12px; }
     .chip { display: none; }
-    .closing { padding: 48px 22px; }
+
+    .stats { grid-template-columns: 1fr; border-radius: 16px; }
+    .stat { padding: 18px 20px; }
+    .stat + .stat { border-left: 0; border-top: 1px solid var(--line); }
+    .stat b { font-size: 28px; }
+    .stat span { font-size: 13px; }
+
+    section { padding-top: 64px; }
+    .eyebrow { font-size: 11px; }
+    h2 { font-size: 28px; margin: 10px 0 12px; }
+    .sub { font-size: 15.5px; }
+
+    .features { grid-template-columns: 1fr; gap: 12px; margin-top: 28px; }
+    .feature { padding: 20px; border-radius: 16px; }
+    .feature .ic { width: 36px; height: 36px; border-radius: 10px; margin-bottom: 14px; }
+    .feature .ic svg { width: 18px; height: 18px; }
+    .feature h3 { font-size: 16px; margin-bottom: 6px; }
+    .feature p { font-size: 14px; }
+
+    .steps { gap: 12px; margin-top: 28px; }
+    .step { padding: 20px; gap: 18px; border-radius: 16px; }
+    .step .num { font-size: 38px; }
+    .step h3 { font-size: 17px; margin: 12px 0 8px; }
+    .step p { font-size: 14px; }
+    .copy { font-size: 13px; padding: 4px 4px 4px 12px; }
+    .copy button { font-size: 12px; padding: 6px 12px; margin-left: 6px; }
+    .window { border-radius: 12px; }
+    .window-bar { padding: 9px 12px; }
+    .window-bar i { width: 8px; height: 8px; }
+    .unzip { min-height: 150px; }
+    .file svg { width: 48px; height: 48px; }
+    .unzip-art { gap: 16px; font-size: 12px; }
+
+    .faq { margin-top: 24px; gap: 10px; }
+    details { padding: 2px 18px; border-radius: 14px; }
+    summary { font-size: 14.5px; padding: 15px 0; }
+    details p { font-size: 14px; margin-bottom: 16px; }
+
+    .closing { margin-top: 64px; padding: 40px 20px; border-radius: 20px; }
+    .closing img { width: 48px; height: 48px; }
+    .closing .sub { margin-bottom: 24px; }
+    footer { padding: 40px 0 32px; font-size: 12.5px; }
+  }
+  @media (max-width: 380px) {
+    body { font-size: 14.5px; }
+    h1 { font-size: 34px; }
+    h2 { font-size: 25px; }
+    .lede, .sub { font-size: 15px; }
+    .btn { padding: 11px 18px; font-size: 14.5px; }
+    .feature, .step { padding: 18px; }
+    .step .num { font-size: 34px; }
+    .popup { width: min(240px, 100%); }
   }
 </style>
 </head>
