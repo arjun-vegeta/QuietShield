@@ -121,12 +121,54 @@ chrome.runtime.onInstalled.addListener(async () => {
   await Promise.all([installCosmeticData(), installRegexRules()])
   await applySettings()
   chrome.declarativeNetRequest.setExtensionActionOptions({ displayActionCountAsBadgeText: true })
+  if (!isStoreInstall()) {
+    chrome.alarms.create('update-check', { delayInMinutes: 1, periodInMinutes: 24 * 60 })
+  }
   console.log('[shields] installed')
 })
 
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area === 'local' && changes.settings) applySettings()
 })
+
+// ---- update check (GitHub installs only) --------------------------------------------------------
+// Unpacked/GitHub installs never auto-update, so once a day we ask GitHub's public releases API
+// whether a newer version exists and surface it in the popup. Web Store installs (which carry an
+// injected `update_url`) update through the store and skip this. Users can turn it off.
+const RELEASES_API = 'https://api.github.com/repos/arjun-vegeta/QuietShield/releases/latest'
+const isStoreInstall = () => 'update_url' in chrome.runtime.getManifest()
+
+const newerVersion = (latest, current) => {
+  const a = latest.replace(/^v/, '').split('.').map(Number)
+  const b = current.split('.').map(Number)
+  for (let i = 0; i < Math.max(a.length, b.length); i++) {
+    if ((a[i] ?? 0) !== (b[i] ?? 0)) return (a[i] ?? 0) > (b[i] ?? 0)
+  }
+  return false
+}
+
+async function checkForUpdates () {
+  const settings = await getSettings()
+  if (isStoreInstall() || settings.updateCheck === false) {
+    await chrome.storage.local.remove('update')
+    return null
+  }
+  try {
+    const res = await fetch(RELEASES_API, { headers: { Accept: 'application/vnd.github+json' }, credentials: 'omit', cache: 'no-store' })
+    if (!res.ok) return null
+    const { tag_name: tag, html_url: url } = await res.json()
+    const current = chrome.runtime.getManifest().version
+    const update = tag && newerVersion(tag, current) ? { version: tag.replace(/^v/, ''), url, checkedAt: Date.now() } : null
+    if (update) await chrome.storage.local.set({ update })
+    else await chrome.storage.local.remove('update')
+    return update
+  } catch {
+    return null
+  }
+}
+
+chrome.alarms.onAlarm.addListener((a) => { if (a.name === 'update-check') checkForUpdates() })
+chrome.runtime.onStartup.addListener(() => checkForUpdates())
 
 // ---- messages from content scripts -------------------------------------------------------------
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
@@ -157,6 +199,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       default: JSON.parse(eng.def.check(msg.url, msg.source, msg.requestType)),
       additional: JSON.parse(eng.add.check(msg.url, msg.source, msg.requestType)),
     }))
+    return true
+  }
+  if (msg?.type === 'checkForUpdates') {
+    checkForUpdates().then(sendResponse)
     return true
   }
   if (msg?.type === 'getSettings') {

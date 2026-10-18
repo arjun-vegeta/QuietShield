@@ -6,6 +6,17 @@ A Chrome Manifest V3 extension that reproduces Brave Shields' ad and tracker blo
 **Brave's own engine, [adblock-rust](https://github.com/brave/adblock-rust)**, Brave's default
 filter lists, and ports of Brave's cosmetic-filtering scripts.
 
+## Install
+
+**[Step-by-step install guide](https://arjun-vegeta.github.io/QuietShield/)** — about a minute:
+
+1. Download [`quietshield.zip`](https://github.com/arjun-vegeta/QuietShield/releases/latest/download/quietshield.zip) and unzip it.
+2. Open `chrome://extensions` and turn on **Developer mode**.
+3. Drag the unzipped `quietshield` folder onto the page.
+
+Releases are built by GitHub Actions with the latest Brave filter lists (push a `vX.Y.Z` tag matching
+`package.json`). GitHub installs check for new releases daily (can be turned off in the popup).
+
 ## How it maps Brave Shields onto MV3
 
 | Brave (brave-core) | This extension |
@@ -26,6 +37,7 @@ filter lists, and ports of Brave's cosmetic-filtering scripts.
 npm install
 npm run fetch   # Brave list catalog + default lists, Brave resources, uBlock Origin checkout
 npm run build   # compiler → DNR rules, cosmetic data, scriptlet shards; wasm engine; manifest
+npm run package # dist/quietshield-<version>.zip (+ dist/quietshield.zip)
 ```
 
 Requires Rust (stable + `wasm32-unknown-unknown`), `wasm-bindgen-cli 0.2.129`, Node 22+.

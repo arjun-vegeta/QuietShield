@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install QuietShield</title>
+<meta name="description" content="Install QuietShield, a free ad and tracker blocker for Chrome powered by Brave's open-source adblock-rust engine.">
+<link rel="icon" href="icon.png">
+<style>
+  :root { --bg: #f6f7fb; --card: #fff; --fg: #1b1e28; --muted: #5d6273; --line: #e3e6ef; --accent: #3a56d8; --accent-fg: #fff; --code: #eef0f7; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #11131b; --card: #1a1d28; --fg: #eceef4; --muted: #a1a6b5; --line: #2a2e3c; --accent: #6f86ff; --accent-fg: #0d1030; --code: #242838; } }
+  * { box-sizing: border-box }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 48px 16px 64px; }
+  header { display: flex; align-items: center; gap: 16px; margin-bottom: 8px }
+  header img { width: 64px; height: 64px }
+  h1 { font-size: 34px; margin: 0; letter-spacing: -0.5px }
+  .lede { color: var(--muted); margin: 6px 0 28px; font-size: 18px }
+  .download { display: inline-flex; align-items: center; gap: 10px; background: var(--accent); color: var(--accent-fg); text-decoration: none; font-weight: 650; padding: 14px 22px; border-radius: 10px; font-size: 18px }
+  .download:hover { filter: brightness(1.08) }
+  .sub { color: var(--muted); font-size: 14px; margin-top: 10px }
+  ol { list-style: none; padding: 0; margin: 40px 0 0; display: grid; gap: 20px; counter-reset: step }
+  li { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px 22px 22px 70px; position: relative; counter-increment: step }
+  li::before { content: counter(step); position: absolute; left: 22px; top: 20px; width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: var(--accent-fg); display: grid; place-items: center; font-weight: 700 }
+  li h2 { font-size: 19px; margin: 2px 0 6px }
+  li p { margin: 6px 0; color: var(--muted) }
+  li img.card { max-width: 440px }
+  li img { display: block; width: 100%; max-width: 100%; border-radius: 8px; border: 1px solid var(--line); margin-top: 12px }
+  .copy { display: inline-flex; align-items: center; gap: 8px; background: var(--code); border: 1px solid var(--line); border-radius: 8px; padding: 6px 6px 6px 12px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 15px; color: var(--fg); margin: 6px 0 }
+  .copy button { font: inherit; font-family: -apple-system, sans-serif; font-size: 13px; font-weight: 600; border: 0; border-radius: 6px; padding: 5px 10px; background: var(--accent); color: var(--accent-fg); cursor: pointer }
+  section { margin-top: 44px }
+  section h2 { font-size: 22px; margin: 0 0 8px }
+  section p, section li { color: var(--muted) }
+  section ul { padding-left: 20px }
+  footer { margin-top: 48px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); padding-top: 16px }
+  a { color: var(--accent) }
+  code { background: var(--code); padding: 1px 6px; border-radius: 4px; font-size: 0.92em }
+</style>
+</head>
+<body>
+<main>
+  <header><img src="icon.png" alt=""><h1>QuietShield</h1></header>
+  <p class="lede">A free ad and tracker blocker for Chrome, powered by Brave's open-source adblock-rust engine and filter lists. Installs in about a minute.</p>
+  <a class="download" href="https://github.com/arjun-vegeta/QuietShield/releases/latest/download/quietshield.zip">Download QuietShield</a>
+  <p class="sub">Works in Chrome, Edge, Brave, Opera and other Chromium browsers. <a href="https://github.com/arjun-vegeta/QuietShield/releases">All versions</a></p>
+
+  <ol>
+    <li>
+      <h2>Unzip the download</h2>
+      <p>Double-click <code>quietshield.zip</code>. You'll get a folder called <strong>quietshield</strong>. Move it somewhere permanent, like your Documents folder. Chrome runs the extension from this folder, so don't delete it.</p>
+    </li>
+    <li>
+      <h2>Open the extensions page and turn on Developer mode</h2>
+      <p>Paste this into the address bar:</p>
+      <span class="copy"><span id="url">chrome://extensions</span><button type="button" id="copyBtn">Copy</button></span>
+      <p>Then switch on <strong>Developer mode</strong> in the top-right corner.</p>
+      <img src="step-devmode.png" alt="The Developer mode switch in the top-right corner of the Extensions page">
+    </li>
+    <li>
+      <h2>Drag the folder onto the page</h2>
+      <p>Drag the <strong>quietshield</strong> folder from your Downloads or Documents window and drop it anywhere on the Extensions page. (Or click <strong>Load unpacked</strong> and choose the folder.)</p>
+      <p>QuietShield appears in the list. That's it — click the puzzle-piece icon in the toolbar to pin it.</p>
+      <img class="card" src="step-card.png" alt="QuietShield installed on the Extensions page">
+    </li>
+  </ol>
+
+  <section>
+    <h2>Updating</h2>
+    <p>QuietShield checks GitHub once a day and shows a banner in its popup when a new version is out. Download it, replace the contents of your <strong>quietshield</strong> folder, then click the ↻ reload icon on the QuietShield card. Your settings are kept.</p>
+  </section>
+
+  <section>
+    <h2>Troubleshooting</h2>
+    <ul>
+      <li><strong>QuietShield turned itself off.</strong> Chrome sometimes disables developer-mode extensions after a browser update. Open <code>chrome://extensions</code> and switch it back on.</li>
+      <li><strong>"Manifest file is missing".</strong> You dropped the wrong folder. Pick the folder that directly contains <code>manifest.json</code>.</li>
+      <li><strong>A site looks broken.</strong> Click the QuietShield icon and untick <em>Shields up for this site</em>, then reload.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Privacy</h2>
+    <p>No accounts, analytics or tracking. All filtering happens on your device. The only request QuietShield makes is the daily update check to GitHub, which you can turn off in the popup. <a href="https://github.com/arjun-vegeta/QuietShield/blob/main/PRIVACY.md">Privacy policy</a>.</p>
+  </section>
+
+  <footer>
+    Open source on <a href="https://github.com/arjun-vegeta/QuietShield">GitHub</a>. QuietShield is an independent project and is not affiliated with or endorsed by Brave Software.
+  </footer>
+</main>
+<script>
+  document.getElementById('copyBtn').addEventListener('click', async (e) => {
+    try { await navigator.clipboard.writeText('chrome://extensions'); e.target.textContent = 'Copied' }
+    catch { const r = document.createRange(); r.selectNodeContents(document.getElementById('url')); getSelection().removeAllRanges(); getSelection().addRange(r) }
+    setTimeout(() => { e.target.textContent = 'Copy' }, 1500)
+  })
+</script>
+</body>
+</html>
