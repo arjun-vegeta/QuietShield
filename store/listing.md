@@ -2,14 +2,16 @@
 
 ## Store listing tab
 **Name:** QuietShield — Ad & Tracker Blocker
-**Summary (≤132 chars):** Blocks ads and trackers quietly, using Brave's open-source adblock-rust engine and filter lists.
+**Summary (≤132 chars):** No more “disable ad blocker to continue.” Blocks ads and trackers with Brave's engine and lists.
 **Category:** Privacy & Security
 **Language:** English
 
 **Description:**
+No more “disable ad blocker to continue.”
+
 QuietShield blocks ads, trackers, cookie banners and anti-adblock walls, while staying hard for websites to detect.
 
-• Powered by Brave's open-source adblock-rust engine, the same engine behind Brave's built-in blocker
+• Powered by Brave's adblock-rust engine, the same engine behind Brave's built-in blocker
 • Uses the same default filter lists (EasyList, EasyPrivacy, uBlock Origin filters and Brave's own lists)
 • Hides leftover ad boxes and runs anti-adblock fixes before page scripts load
 • Standard mode keeps sites working by not blocking their own first-party content; Aggressive mode blocks more

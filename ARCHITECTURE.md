@@ -1,5 +1,7 @@
 # QuietShield architecture
 
+*No more “disable ad blocker to continue.”*
+
 The question that started this: *Brave blocks ads well and websites rarely notice. Can Chrome do the
 same with an extension?* This document covers the research, the design, how we tested against
 Brave, what we fixed after reverse-engineering the differences, and how to build it yourself.

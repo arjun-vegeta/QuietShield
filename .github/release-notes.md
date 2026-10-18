@@ -1,3 +1,5 @@
+**No more “disable ad blocker to continue.”**
+
 ## Install (about 1 minute)
 
 1. Download **quietshield.zip** below and unzip it.

@@ -38,7 +38,7 @@ const manifest = {
   name: 'QuietShield — Ad & Tracker Blocker',
   short_name: 'QuietShield',
   version: JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8')).version,
-  description: "Blocks ads and trackers quietly. Powered by Brave's open-source adblock-rust engine. Not affiliated with Brave Software.",
+  description: "No more \u201cdisable ad blocker to continue.\u201d Brave's adblock-rust engine for Chrome. Not affiliated with Brave.",
   minimum_chrome_version: '128',
   permissions: ['declarativeNetRequest', 'scripting', 'storage', 'unlimitedStorage', 'activeTab', 'alarms'],
   optional_permissions: ['privacy'],
