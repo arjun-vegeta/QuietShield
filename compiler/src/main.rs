@@ -7,6 +7,7 @@
 
 mod cosmetic;
 mod dnr;
+mod entities;
 
 use adblock::lists::{parse_filter, FilterSet, ParseOptions, ParsedLine};
 use adblock::resources::{PermissionMask, Resource, ResourceType};
@@ -183,7 +184,10 @@ fn main() -> Result<()> {
         parsed.push(filters);
     }
 
-    let mut conv = dnr::Converter::new(&res.redirect_aliases);
+    let all_text: String = groups.iter().map(|g| g.text.as_str()).collect::<Vec<_>>().join("\n");
+    let entity_suffixes = entities::suffixes(&all_text, 40);
+    println!("entities: {} labels expanded to concrete suffixes", entity_suffixes.len());
+    let mut conv = dnr::Converter::with_entities(&res.redirect_aliases, entity_suffixes);
     let mut manifest_rulesets = vec![];
     let mut regex_rules = vec![];
     let mut summary = BTreeMap::new();
@@ -200,6 +204,11 @@ fn main() -> Result<()> {
         let aggressive = dnr::finalize(rules.aggressive, 1);
         for mut r in rules.regex {
             r["group"] = json!(g.name);
+            regex_rules.push(r);
+        }
+        for mut r in rules.regex_aggressive {
+            r["group"] = json!(g.name);
+            r["aggressive"] = json!(true);
             regex_rules.push(r);
         }
         summary.insert(g.name.clone(), json!({"title": g.title, "filters": filters.len(), "standard": standard.len(), "aggressive": aggressive.len()}));
@@ -415,6 +424,9 @@ fn emit_bundle(lib: &ScriptletLib, entries: &BTreeMap<String, Option<&Vec<String
     s.push_str("};\n");
     s.push_str(SCRIPTLET_LOOKUP);
     s.push_str("})();\n");
+    // V8 reports `sourceURL` instead of the chrome-extension:// file URL in Error.stack and
+    // ErrorEvent.filename. `<anonymous>` is exactly what Brave's inline-injected scriptlets show.
+    s.push_str("//# sourceURL=<anonymous>\n");
     s
 }
 

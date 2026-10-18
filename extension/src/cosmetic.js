@@ -100,6 +100,8 @@ CC.numQueues = CC.allQueues.length
 
 // Brave: kHideSelectorsInjectScript
 const hideSelectors = (selectors) => {
+  // With first-party hiding there is no unhide path, so rules go straight to the USER-origin sheet.
+  if (CC.hide1pContent) return forceHide(selectors.filter(s => typeof s === 'string'))
   let nextIndex = cosmeticStyleSheet.cssRules.length
   for (const selector of selectors) {
     if (typeof selector !== 'string') continue
@@ -116,7 +118,7 @@ const hideSelectors = (selectors) => {
       // invalid selector for this engine
     }
   }
-  adopt(cosmeticStyleSheet)
+  if (cosmeticStyleSheet.cssRules.length) adopt(cosmeticStyleSheet)
 }
 
 // ---- class/id collection (content_cosmetic.ts) ----------------------------------------------
@@ -350,6 +352,39 @@ const isSubTreeFirstParty = (elm, possibleQueryResult) => {
   return !queryResult.foundThirdPartyResource
 }
 
+// ---- move settled selectors to a USER-origin sheet ----------------------------------------------
+// A selector that survived Brave's last first-party check is never unhidden again, so it can leave
+// the page-visible adopted sheet. Pages then see no adoptedStyleSheet at steady state (Brave keeps
+// its sheet, which exposes ~550 list selectors to document.adoptedStyleSheets) and cannot remove
+// the rules (USER !important also beats author !important).
+const pendingSettled = []
+let settleTimer
+const dropRule = (selector) => {
+  const idx = allSelectorsToRules.get(selector)
+  if (idx === undefined) return
+  cosmeticStyleSheet.deleteRule(idx)
+  allSelectorsToRules.delete(selector)
+  for (const [s, i] of allSelectorsToRules) if (i > idx) allSelectorsToRules.set(s, i - 1)
+}
+const settleSelector = (selector) => {
+  if (!allSelectorsToRules.has(selector)) return
+  pendingSettled.push(selector)
+  if (settleTimer !== undefined) return
+  settleTimer = setTimeout(() => {
+    settleTimer = undefined
+    const batch = pendingSettled.splice(0)
+    // One rule per selector: an invalid selector must not poison the batch.
+    const css = batch.map(s => `${s}{display:none !important}\n`).join('')
+    sendMessage({ type: 'insertCSS', css }).then((ok) => {
+      if (!ok) return
+      for (const s of batch) dropRule(s)
+      if (cosmeticStyleSheet.cssRules.length === 0) {
+        document.adoptedStyleSheets = document.adoptedStyleSheets.filter(s => s !== cosmeticStyleSheet)
+      }
+    })
+  }, 50)
+}
+
 const unhideSelectors = (selectors) => {
   if (selectors.size === 0) return
   // Rebuild index after deletion; simpler and less error-prone than Brave's in-place resync.
@@ -392,7 +427,9 @@ const pumpCosmeticFilterQueues = () => {
     unhideSelectors(newlyIdentifiedFirstPartySelectors)
     for (const aUsedSelector of currentWorkLoad) {
       currentQueue.delete(aUsedSelector)
-      if (nextQueue && !newlyIdentifiedFirstPartySelectors.has(aUsedSelector)) nextQueue.add(aUsedSelector)
+      if (newlyIdentifiedFirstPartySelectors.has(aUsedSelector)) continue
+      if (nextQueue) nextQueue.add(aUsedSelector)
+      else settleSelector(aUsedSelector)
     }
     didPumpAnything = true
     break

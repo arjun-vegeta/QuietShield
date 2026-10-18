@@ -58,15 +58,21 @@ Load `extension/` as an unpacked extension (or `tests/launch-cft.sh` for Chrome 
 `tests/compare.mjs`, `tests/probe.mjs`, `tests/isolated.mjs`, `tests/sw-eval.mjs` drive the
 browsers over CDP; `cargo test` covers the converter.
 
-## Known gaps (MV3 platform limits)
+## Known gaps (MV3 platform limits) and how they're handled
 
-- No CNAME uncloaking (no DNS API); no ephemeral first-party storage for blocked domains.
-- Surrogates are served by redirect (observable), not in place.
-- Static rules update only with an extension update (Chrome's skip-review fast path applies to
-  safe rules); 171/299 regex filters pass Chrome's RE2 limits.
-- `$redirect-rule`, entity domains in `domain=` (134 filters) and fingerprint farbling are not
-  reproduced.
-- MAIN-world scriptlets carry a `chrome-extension://` URL in stack traces.
+- **CNAME uncloaking:** no DNS API, so AdGuard's cname-trackers map (MIT) is compiled into
+  `cname` / `cname-aggressive` rulesets, keeping only hosts whose canonical tracker Brave's lists
+  block. Like Brave, Standard mode uncloaks only third-party loads; Aggressive also first-party.
+- **Surrogates are served by redirect** (no Resource Timing entry, unlike Brave's in-place stubs).
+  A Resource Timing shim prototype lives in `research/rt-shim/`.
+- **Regex filters:** Chrome's RE2 budget rejects ~40%; build-time rewrites gated against
+  adblock-rust's 243k-request corpus (`scripts/regex-alternatives.mjs`) recover most of them.
+- **Entity domains** (`domain=site.*`) are expanded to concrete suffixes (`compiler/src/entities.rs`).
+- **Cross-site cookies:** optional popup toggle (Brave blocks them by default; Chrome needs the
+  optional `privacy` permission). No ephemeral first-party storage and no fingerprint farbling
+  (prototype in `research/farbling/`).
+- Static rules update only with an extension update; see `research/updates/` for the
+  skip-review pipeline design.
 
 ## Licensing
 

@@ -1,0 +1,875 @@
+{
+ "listFiles": 30,
+ "scriptlets": {
+  "filterLines": 15531,
+  "uniqueFilterLines": 15503,
+  "total": 15449,
+  "distinct": 85,
+  "coveragePct": {
+   "top5": 46.35,
+   "top10": 73.76,
+   "top15": 85.69,
+   "top20": 91.42,
+   "top25": 94.93,
+   "top30": 96.82,
+   "top40": 98.27,
+   "top50": 99.18
+  },
+  "hostWeighted": {
+   "total": 52290,
+   "distinct": 85,
+   "coveragePct": {
+    "top5": 55.53,
+    "top10": 78.26,
+    "top15": 88.82,
+    "top20": 93.18,
+    "top25": 95.44,
+    "top30": 97.12,
+    "top40": 98.89,
+    "top50": 99.54
+   }
+  },
+  "byName": [
+   {
+    "name": "set-cookie.js",
+    "filters": 2124,
+    "hostEntries": 4012,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "set-constant.js",
+    "filters": 1490,
+    "hostEntries": 3923,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "abort-on-property-read.js",
+    "filters": 1313,
+    "hostEntries": 2723,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "abort-current-script.js",
+    "filters": 1225,
+    "hostEntries": 5344,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "trusted-click-element.js",
+    "filters": 1009,
+    "hostEntries": 2972,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "trusted-set-cookie.js",
+    "filters": 983,
+    "hostEntries": 2270,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "prevent-window-open.js",
+    "filters": 872,
+    "hostEntries": 2321,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "prevent-setTimeout.js",
+    "filters": 871,
+    "hostEntries": 1815,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "remove-node-text.js",
+    "filters": 814,
+    "hostEntries": 12788,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "prevent-addEventListener.js",
+    "filters": 694,
+    "hostEntries": 1539,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "set-local-storage-item.js",
+    "filters": 535,
+    "hostEntries": 2752,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "prevent-fetch.js",
+    "filters": 438,
+    "hostEntries": 1071,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "abort-on-property-write.js",
+    "filters": 324,
+    "hostEntries": 616,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "trusted-replace-node-text.js",
+    "filters": 287,
+    "hostEntries": 722,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "prevent-xhr.js",
+    "filters": 259,
+    "hostEntries": 462,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "abort-on-stack-trace.js",
+    "filters": 204,
+    "hostEntries": 427,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "adjust-setInterval.js",
+    "filters": 200,
+    "hostEntries": 445,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "trusted-set-local-storage-item.js",
+    "filters": 177,
+    "hostEntries": 208,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "prevent-setInterval.js",
+    "filters": 153,
+    "hostEntries": 207,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "noeval-if.js",
+    "filters": 151,
+    "hostEntries": 1534,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "adjust-setTimeout.js",
+    "filters": 132,
+    "hostEntries": 230,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "json-prune.js",
+    "filters": 125,
+    "hostEntries": 194,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "remove-attr.js",
+    "filters": 113,
+    "hostEntries": 261,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "remove-cookie.js",
+    "filters": 89,
+    "hostEntries": 170,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "trusted-replace-argument.js",
+    "filters": 84,
+    "hostEntries": 660,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "href-sanitizer.js",
+    "filters": 75,
+    "hostEntries": 170,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "nowebrtc.js",
+    "filters": 62,
+    "hostEntries": 102,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "set-session-storage-item.js",
+    "filters": 58,
+    "hostEntries": 150,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "remove-class.js",
+    "filters": 48,
+    "hostEntries": 190,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "json-prune-fetch-response.js",
+    "filters": 48,
+    "hostEntries": 60,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "trusted-prevent-dom-bypass.js",
+    "filters": 31,
+    "hostEntries": 59,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "noeval.js",
+    "filters": 29,
+    "hostEntries": 156,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "json-prune-xhr-response.js",
+    "filters": 25,
+    "hostEntries": 42,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "prevent-bab.js",
+    "filters": 22,
+    "hostEntries": 22,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "trusted-set-constant.js",
+    "filters": 21,
+    "hostEntries": 41,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "trusted-create-html.js",
+    "filters": 20,
+    "hostEntries": 24,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "trusted-json-edit.js",
+    "filters": 20,
+    "hostEntries": 106,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "popads-dummy.js",
+    "filters": 19,
+    "hostEntries": 23,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "xml-prune.js",
+    "filters": 19,
+    "hostEntries": 38,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "json-edit.js",
+    "filters": 18,
+    "hostEntries": 40,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "trusted-replace-fetch-response.js",
+    "filters": 18,
+    "hostEntries": 21,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "nofab.js",
+    "filters": 18,
+    "hostEntries": 34,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "trusted-json-edit-fetch-response.js",
+    "filters": 17,
+    "hostEntries": 24,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "trusted-suppress-native-method.js",
+    "filters": 16,
+    "hostEntries": 80,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "trusted-replace-outbound-text.js",
+    "filters": 15,
+    "hostEntries": 36,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "prevent-refresh.js",
+    "filters": 13,
+    "hostEntries": 18,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "trusted-set-session-storage-item.js",
+    "filters": 12,
+    "hostEntries": 12,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "trusted-replace-xhr-response.js",
+    "filters": 11,
+    "hostEntries": 16,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "trusted-set-attr.js",
+    "filters": 11,
+    "hostEntries": 11,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "trusted-prevent-xhr.js",
+    "filters": 11,
+    "hostEntries": 83,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "trusted-json-edit-xhr-response.js",
+    "filters": 10,
+    "hostEntries": 11,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "trusted-set-cookie-reload.js",
+    "filters": 9,
+    "hostEntries": 20,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "set-attr.js",
+    "filters": 8,
+    "hostEntries": 10,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "prevent-requestAnimationFrame.js",
+    "filters": 8,
+    "hostEntries": 16,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "m3u-prune.js",
+    "filters": 8,
+    "hostEntries": 12,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "trusted-override-element-method.js",
+    "filters": 8,
+    "hostEntries": 9,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "prevent-innerHTML.js",
+    "filters": 8,
+    "hostEntries": 52,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "trusted-edit-inbound-object.js",
+    "filters": 7,
+    "hostEntries": 7,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "json-edit-fetch-response.js",
+    "filters": 6,
+    "hostEntries": 7,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "set-cookie-reload.js",
+    "filters": 5,
+    "hostEntries": 5,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "spoof-css.js",
+    "filters": 5,
+    "hostEntries": 5,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "disable-newtab-links.js",
+    "filters": 5,
+    "hostEntries": 5,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "jsonl-edit-xhr-response.js",
+    "filters": 4,
+    "hostEntries": 8,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "trusted-prevent-fetch.js",
+    "filters": 4,
+    "hostEntries": 36,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "edit-object-on-setter.js",
+    "filters": 4,
+    "hostEntries": 145,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "popads.js",
+    "filters": 3,
+    "hostEntries": 3,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "json-edit-xhr-response.js",
+    "filters": 3,
+    "hostEntries": 3,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "brave-video-bg-play.js",
+    "filters": 2,
+    "hostEntries": 2,
+    "origin": "Brave (MPL-2.0)"
+   },
+   {
+    "name": "prevent-canvas.js",
+    "filters": 2,
+    "hostEntries": 2,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "prevent-clipboard-write.js",
+    "filters": 2,
+    "hostEntries": 92,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "json-edit-fetch-request.js",
+    "filters": 1,
+    "hostEntries": 1,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "proxy-apply-config.js",
+    "filters": 1,
+    "hostEntries": 1,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "prevent-dialog.js",
+    "filters": 1,
+    "hostEntries": 1,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "fingerprint2.js",
+    "filters": 1,
+    "hostEntries": 1,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "brave-fix.js",
+    "filters": 1,
+    "hostEntries": 271,
+    "origin": "Brave (MPL-2.0)"
+   },
+   {
+    "name": "de-amp.js",
+    "filters": 1,
+    "hostEntries": 1,
+    "origin": "Brave (MPL-2.0)"
+   },
+   {
+    "name": "brave-youtube-theater-fix.js",
+    "filters": 1,
+    "hostEntries": 1,
+    "origin": "Brave (MPL-2.0)"
+   },
+   {
+    "name": "brave-youtube-navigation-fix.js",
+    "filters": 1,
+    "hostEntries": 1,
+    "origin": "Brave (MPL-2.0)"
+   },
+   {
+    "name": "brave-youtube-playback-speed-fix.js",
+    "filters": 1,
+    "hostEntries": 1,
+    "origin": "Brave (MPL-2.0)"
+   },
+   {
+    "name": "brave-disable-pageview-api.js",
+    "filters": 1,
+    "hostEntries": 330,
+    "origin": "Brave (MPL-2.0)"
+   },
+   {
+    "name": "close-window.js",
+    "filters": 1,
+    "hostEntries": 1,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "alert-buster.js",
+    "filters": 1,
+    "hostEntries": 1,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "prevent-navigation.js",
+    "filters": 1,
+    "hostEntries": 1,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "multiup.js",
+    "filters": 1,
+    "hostEntries": 3,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "mpegdash-prune.js",
+    "filters": 1,
+    "hostEntries": 1,
+    "origin": "uBO (GPLv3)"
+   }
+  ],
+  "byOrigin": {
+   "uBO (GPLv3)": 15441,
+   "Brave (MPL-2.0)": 8
+  },
+  "exceptions": {
+   "set-constant.js": 11,
+   "abort-on-property-read.js": 6,
+   "set-cookie.js": 5,
+   "trusted-click-element.js": 5,
+   "abort-current-script.js": 5,
+   "abort-on-stack-trace.js": 4,
+   "prevent-setTimeout.js": 4,
+   "adjust-setInterval.js": 2,
+   "prevent-fetch.js": 2,
+   "noeval.js": 1,
+   "trusted-replace-node-text.js": 1,
+   "adjust-setTimeout.js": 1,
+   "prevent-xhr.js": 1,
+   "trusted-set-cookie.js": 1,
+   "remove-class.js": 1,
+   "google-ima.js": 1,
+   "json-prune.js": 1,
+   "prevent-clipboard-write.js": 1,
+   "json-prune-fetch-response.js": 1
+  },
+  "unresolvedNames": {}
+ },
+ "redirects": {
+  "uniqueFilterLines": 1435,
+  "total": 1435,
+  "distinct": 56,
+  "coveragePct": {
+   "top5": 69.06,
+   "top10": 85.99,
+   "top15": 91.36,
+   "top20": 94.7,
+   "top25": 96.59,
+   "top30": 97.84,
+   "top40": 98.89,
+   "top50": 99.58
+  },
+  "byName": [
+   {
+    "name": "noop.js",
+    "filters": 389,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "noop.js [redirect-rule]",
+    "filters": 236,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "google-ima.js",
+    "filters": 214,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "noop-0.1s.mp3",
+    "filters": 85,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "noop.txt [redirect-rule]",
+    "filters": 67,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "1x1.gif [redirect-rule]",
+    "filters": 64,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "noop.txt",
+    "filters": 58,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "1x1.gif",
+    "filters": 58,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "noop-1s.mp4",
+    "filters": 35,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "noop.html [redirect-rule]",
+    "filters": 28,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "noop.html",
+    "filters": 22,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "fingerprint2.js",
+    "filters": 16,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "google-analytics_analytics.js [redirect-rule]",
+    "filters": 15,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "2x2.png",
+    "filters": 12,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "32x32.png",
+    "filters": 12,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "google-analytics_analytics.js",
+    "filters": 11,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "2x2.png [redirect-rule]",
+    "filters": 11,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "32x32.png [redirect-rule]",
+    "filters": 10,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "blank-mp4",
+    "filters": 9,
+    "origin": "unknown"
+   },
+   {
+    "name": "googletagservices_gpt.js",
+    "filters": 7,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "googlesyndication_adsbygoogle.js",
+    "filters": 7,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "noop.css",
+    "filters": 5,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "nofab.js",
+    "filters": 5,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "noop-0.1s.mp3 [redirect-rule]",
+    "filters": 5,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "prebid-ads.js",
+    "filters": 5,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "googletagservices_gpt.js [redirect-rule]",
+    "filters": 4,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "amazon_apstag.js",
+    "filters": 4,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "nobab2.js",
+    "filters": 4,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "prebid-ads.js [redirect-rule]",
+    "filters": 3,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "noop-vast3.xml",
+    "filters": 3,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "chartbeat.js",
+    "filters": 2,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "noop.json",
+    "filters": 2,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "noop-vmap1.xml",
+    "filters": 2,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "google-ima.js [redirect-rule]",
+    "filters": 2,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "empty",
+    "filters": 2,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "blank-js",
+    "filters": 1,
+    "origin": "unknown"
+   },
+   {
+    "name": "google-analytics_cx_api.js",
+    "filters": 1,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "scorecardresearch_beacon.js",
+    "filters": 1,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "google-analytics_ga.js",
+    "filters": 1,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "outbrain-widget.js",
+    "filters": 1,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "fingerprint3.js",
+    "filters": 1,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "hd-main.js",
+    "filters": 1,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "popads.js",
+    "filters": 1,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "noop-1s.mp4 [redirect-rule]",
+    "filters": 1,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "amazon_ads.js",
+    "filters": 1,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "amazon_apstag.js [redirect-rule]",
+    "filters": 1,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "sensors-analytics.js",
+    "filters": 1,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "none",
+    "filters": 1,
+    "origin": "unknown"
+   },
+   {
+    "name": "async-sugarcoat-04394153a7ce417b88e3fe1790a4e6a269bfebe5",
+    "filters": 1,
+    "origin": "unknown"
+   },
+   {
+    "name": "async-sugarcoat-8a459c41783885dc83d30f5b7da2359091f4e607",
+    "filters": 1,
+    "origin": "unknown"
+   },
+   {
+    "name": "none [redirect-rule]",
+    "filters": 1,
+    "origin": "unknown"
+   },
+   {
+    "name": "doubleclick_instream_ad_status.js",
+    "filters": 1,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "empty [redirect-rule]",
+    "filters": 1,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "nitropay_ads.js",
+    "filters": 1,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "noop-vast2.xml",
+    "filters": 1,
+    "origin": "uBO (GPLv3)"
+   },
+   {
+    "name": "adthrive_abd.js",
+    "filters": 1,
+    "origin": "uBO (GPLv3)"
+   }
+  ],
+  "unresolvedNames": {
+   "blank-mp4": 9,
+   "none": 2,
+   "blank-js": 1,
+   "async-sugarcoat-04394153a7ce417b88e3fe1790a4e6a269bfebe5": 1,
+   "async-sugarcoat-8a459c41783885dc83d30f5b7da2359091f4e607": 1
+  }
+ }
+}

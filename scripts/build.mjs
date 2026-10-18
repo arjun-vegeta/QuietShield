@@ -17,6 +17,8 @@ run('cargo', ['build', '--release', '--quiet', '--target', 'wasm32-unknown-unkno
 run('wasm-bindgen', ['--target', 'web', '--no-typescript', '--out-dir', path.join(ext, 'build/wasm'),
   path.join(root, 'engine-wasm/target/wasm32-unknown-unknown/release/shields_engine_wasm.wasm')])
 run('node', ['scripts/build-engines.mjs'])
+run('node', ['scripts/build-cname.mjs'])
+run('node', ['scripts/regex-alternatives.mjs'])
 
 await esbuild.build({
   entryPoints: [path.join(ext, 'src/cosmetic.js')],
@@ -39,6 +41,7 @@ const manifest = {
   description: "Blocks ads and trackers quietly. Powered by Brave's open-source adblock-rust engine. Not affiliated with Brave Software.",
   minimum_chrome_version: '128',
   permissions: ['declarativeNetRequest', 'scripting', 'storage', 'unlimitedStorage', 'activeTab', 'alarms'],
+  optional_permissions: ['privacy'],
   host_permissions: ['<all_urls>'],
   background: { service_worker: 'build/background.js', type: 'module' },
   content_security_policy: { extension_pages: "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';" },

@@ -13,6 +13,9 @@
     "activeTab",
     "alarms"
   ],
+  "optional_permissions": [
+    "privacy"
+  ],
   "host_permissions": [
     "<all_urls>"
   ],
@@ -89,6 +92,16 @@
         "enabled": false,
         "id": "mobile-aggressive",
         "path": "build/rules/mobile-aggressive.json"
+      },
+      {
+        "id": "cname",
+        "enabled": true,
+        "path": "build/rules/cname.json"
+      },
+      {
+        "id": "cname-aggressive",
+        "enabled": false,
+        "path": "build/rules/cname-aggressive.json"
       }
     ]
   },
