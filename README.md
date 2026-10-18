@@ -2,7 +2,7 @@
 
 <h1 align="center">QuietShield</h1>
 
-<p align="center">A free ad and tracker blocker for Chrome, powered by Brave's open-source ad-blocking engine.<br>
+<p align="center"><b>No more &ldquo;disable ad blocker to continue.&rdquo;</b><br>A free ad and tracker blocker for Chrome, powered by Brave's ad-blocking engine.<br>
 <a href="https://quietshield.arjunr.dev/">Website</a> · <a href="https://github.com/arjun-vegeta/QuietShield/releases/latest/download/quietshield.zip">Download</a> · <a href="ARCHITECTURE.md">Architecture</a></p>
 
 ---
