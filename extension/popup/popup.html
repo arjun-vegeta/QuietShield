@@ -2,6 +2,7 @@
 <meta charset="utf-8">
 <link rel="stylesheet" href="popup.css">
 <main>
+  <a id="update" class="update" hidden target="_blank" rel="noopener"></a>
   <h1>QuietShield <span id="host"></span></h1>
   <label class="row"><input type="checkbox" id="site"> Shields up for this site</label>
   <fieldset>
@@ -11,5 +12,7 @@
   </fieldset>
   <p class="count"><span id="count">0</span> blocked on this tab</p>
   <p class="note">Changes apply on reload.</p>
+  <label class="row small" id="updateRow" hidden><input type="checkbox" id="updateCheck"> Check GitHub for updates daily</label>
+  <p class="version" id="version"></p>
 </main>
 <script src="popup.js" type="module"></script>

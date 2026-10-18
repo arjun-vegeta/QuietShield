@@ -1,4 +1,4 @@
-:root { --bg: #fff; --fg: #1d1f25; --muted: #6b7080; --accent: #fb542b; color-scheme: light dark; }
+:root { --bg: #fff; --fg: #1d1f25; --muted: #6b7080; --accent: #3a56d8; color-scheme: light dark; }
 @media (prefers-color-scheme: dark) { :root { --bg: #1e2029; --fg: #f0f1f5; --muted: #a0a5b2; } }
 body { margin: 0; background: var(--bg); color: var(--fg); font: 13px/1.4 system-ui, sans-serif; width: 260px; }
 main { padding: 14px 16px; }
@@ -9,3 +9,7 @@ fieldset { border: 1px solid color-mix(in srgb, var(--muted) 40%, transparent); 
 input { accent-color: var(--accent); }
 .count { font-size: 12px; } #count { font-weight: 600; color: var(--accent); }
 .note { color: var(--muted); font-size: 11px; margin: 4px 0 0; }
+.update { display: block; margin: -4px 0 10px; padding: 8px 10px; border-radius: 6px; background: var(--accent); color: #fff; text-decoration: none; font-weight: 600; font-size: 12px; }
+.update[hidden] { display: none; }
+.small { font-size: 11px; color: var(--muted); margin-top: 8px; }
+.version { color: var(--muted); font-size: 10px; margin: 6px 0 0; }

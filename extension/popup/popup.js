@@ -21,6 +21,33 @@ siteBox.addEventListener('change', () => {
 for (const r of document.querySelectorAll('input[name=mode]')) {
   r.addEventListener('change', () => { settings.mode = r.value; save() })
 }
-if (tab?.id !== undefined) {
-  chrome.action.getBadgeText({ tabId: tab.id }).then(t => { document.getElementById('count').textContent = t || '0' })
+// The badge itself shows Chrome's live count; getBadgeText only returns a placeholder for it, so
+// read matched rules instead (allowed for the active tab while the popup is open via activeTab).
+const countLine = document.querySelector('.count')
+if (tab?.id !== undefined && site) {
+  chrome.declarativeNetRequest.getMatchedRules({ tabId: tab.id })
+    .then(({ rulesMatchedInfo }) => { document.getElementById('count').textContent = String(rulesMatchedInfo.length) })
+    .catch(() => { countLine.hidden = true })
+} else {
+  countLine.hidden = true
+}
+
+// Updates (GitHub installs only; Web Store installs update automatically)
+const manifest = chrome.runtime.getManifest()
+document.getElementById('version').textContent = `v${manifest.version}`
+if (!('update_url' in manifest)) {
+  const row = document.getElementById('updateRow')
+  const box = document.getElementById('updateCheck')
+  row.hidden = false
+  box.checked = settings.updateCheck !== false
+  box.addEventListener('change', () => { settings.updateCheck = box.checked; save() })
+  const showUpdate = (u) => {
+    if (!u) return
+    const a = document.getElementById('update')
+    a.textContent = `Update available: v${u.version} — download`
+    a.href = u.url
+    a.hidden = false
+  }
+  const { update } = await chrome.storage.local.get('update')
+  showUpdate(update)
 }

@@ -35,14 +35,20 @@ const manifest = {
   manifest_version: 3,
   name: 'QuietShield — Ad & Tracker Blocker',
   short_name: 'QuietShield',
-  version: '0.1.0',
+  version: JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8')).version,
   description: "Blocks ads and trackers quietly. Powered by Brave's open-source adblock-rust engine. Not affiliated with Brave Software.",
   minimum_chrome_version: '128',
-  permissions: ['declarativeNetRequest', 'declarativeNetRequestFeedback', 'scripting', 'storage', 'unlimitedStorage', 'activeTab'],
+  permissions: ['declarativeNetRequest', 'scripting', 'storage', 'unlimitedStorage', 'activeTab', 'alarms'],
   host_permissions: ['<all_urls>'],
   background: { service_worker: 'build/background.js', type: 'module' },
   content_security_policy: { extension_pages: "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';" },
-  action: { default_popup: 'popup/popup.html', default_title: 'QuietShield' },
+  homepage_url: 'https://github.com/arjun-vegeta/QuietShield',
+  icons: { 16: 'icons/icon-16.png', 32: 'icons/icon-32.png', 48: 'icons/icon-48.png', 128: 'icons/icon-128.png' },
+  action: {
+    default_popup: 'popup/popup.html',
+    default_title: 'QuietShield',
+    default_icon: { 16: 'icons/icon-16.png', 32: 'icons/icon-32.png' },
+  },
   declarative_net_request: { rule_resources: rulesets },
   content_scripts: [
     {

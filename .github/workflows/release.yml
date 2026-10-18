@@ -1,0 +1,71 @@
+# Builds QuietShield with the latest Brave filter lists and publishes a ready-to-install zip.
+#   - push a tag like v0.1.1 (matching package.json "version") → GitHub Release with the zip
+#   - manual run / pushes to main → zip uploaded as a workflow artifact only
+name: Build & release
+
+on:
+  push:
+    tags: ['v*']
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Rust toolchain
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup default stable
+          rustup target add wasm32-unknown-unknown
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/wasm-bindgen
+            ~/.cargo/registry
+            ~/.cargo/git
+            compiler/target
+            engine-wasm/target
+          key: cargo-${{ runner.os }}-${{ hashFiles('compiler/Cargo.lock', 'engine-wasm/Cargo.lock') }}
+
+      - name: wasm-bindgen CLI
+        run: command -v wasm-bindgen || cargo install wasm-bindgen-cli --version 0.2.129 --locked
+
+      - name: Fetch lists and build
+        run: |
+          npm ci
+          npm run fetch
+          npm run build
+          npm run package
+          cargo test --release --manifest-path compiler/Cargo.toml
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: quietshield
+          path: dist/*.zip
+
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if [ "v$VERSION" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json version $VERSION" >&2; exit 1
+          fi
+          sed "s/{{VERSION}}/$VERSION/g" .github/release-notes.md > notes.md
+          gh release create "$GITHUB_REF_NAME" dist/quietshield-$VERSION.zip dist/quietshield.zip \
+            --title "QuietShield $VERSION" --notes-file notes.md
