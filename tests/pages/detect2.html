@@ -1,0 +1,39 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Surrogate / injection observability</title>
+<h1>Surrogate observability</h1>
+<script>
+window.__r = {}
+const R = window.__r
+const frameOf = (stack) => (stack || '').split('\n').slice(1).map(l => l.trim()).filter(l => !l.includes('detect2.html'))
+const po = []
+try { new PerformanceObserver(l => { for (const e of l.getEntries()) po.push(e.name) }).observe({ type: 'resource', buffered: true }) } catch (e) {}
+const g = document.createElement('script')
+g.src = 'https://securepubads.g.doubleclick.net/tag/js/gpt.js'
+g.onload = () => {
+  R.gpt = 'loaded'
+  try { googletag.cmd.push(function () { R.gptCmdFrames = frameOf(new Error().stack) }) } catch (e) { R.gptCmdErr = String(e) }
+  try { R.gptPubadsToString = Function.prototype.toString.call(googletag.pubads).slice(0, 80) } catch (e) {}
+}
+g.onerror = () => { R.gpt = 'error' }
+document.head.appendChild(g)
+const a = document.createElement('script')
+a.src = 'https://www.google-analytics.com/analytics.js'
+a.onload = () => {
+  R.ga = 'loaded'
+  try { ga(function () { R.gaCbFrames = frameOf(new Error().stack) }) } catch (e) { R.gaErr = String(e) }
+}
+a.onerror = () => { R.ga = 'error' }
+document.head.appendChild(a)
+setTimeout(() => {
+  const ents = performance.getEntriesByType('resource')
+  const pick = (needle) => { const e = ents.find(x => x.name.includes(needle)); return e ? { name: e.name, initiatorType: e.initiatorType, responseStatus: e.responseStatus, transferSize: e.transferSize, encodedBodySize: e.encodedBodySize, decodedBodySize: e.decodedBodySize, duration: Math.round(e.duration), nextHopProtocol: e.nextHopProtocol, deliveryType: e.deliveryType, contentType: e.contentType, renderBlockingStatus: e.renderBlockingStatus, redirectStart: e.redirectStart, fetchStart: Math.round(e.fetchStart), responseEnd: Math.round(e.responseEnd) } : null }
+  R.rtGpt = pick('gpt.js'); R.rtGa = pick('analytics.js')
+  R.rtAll = ents.map(e => e.name)
+  R.poNames = po
+  R.adopted = document.adoptedStyleSheets.length
+  R.adoptedRules = [...document.adoptedStyleSheets].map(s => s.cssRules.length)
+  R.adoptedSample = [...document.adoptedStyleSheets].flatMap(s => [...s.cssRules].slice(0, 2).map(r => r.cssText.slice(0, 120)))
+  R.done = true
+}, 3500)
+</script>

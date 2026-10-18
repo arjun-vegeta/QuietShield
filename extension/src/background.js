@@ -4,7 +4,7 @@
 import init, { WasmEngine } from '../build/wasm/shields_engine_wasm.js'
 
 const BUILD = chrome.runtime.getURL('build/')
-const DEFAULT_SETTINGS = { enabled: true, mode: 'standard', sites: {} }
+const DEFAULT_SETTINGS = { enabled: true, mode: 'standard', sites: {}, blockCrossSiteCookies: false }
 
 // ---- WebAssembly engines (lazy; the worker may be torn down after 30s idle) ----------------
 let enginesPromise
@@ -51,33 +51,58 @@ async function applySettings () {
     disableRulesetIds: ids.filter(id => !enable.includes(id)),
   })
 
-  // Per-site "Shields down": allow everything on that site (Brave's per-site toggle).
+  // Dynamic rules: regex filters for the current mode, plus per-site "Shields down" (Brave's
+  // per-site toggle). Everything is removed when the extension is switched off.
   const down = Object.entries(settings.sites ?? {}).filter(([, s]) => s.off).map(([d]) => d)
-  const existing = (await chrome.declarativeNetRequest.getDynamicRules()).filter(r => r.id >= SHIELDS_DOWN_RULE_BASE)
-  await chrome.declarativeNetRequest.updateDynamicRules({
-    removeRuleIds: existing.map(r => r.id),
-    addRules: down.length
-      ? [{ id: SHIELDS_DOWN_RULE_BASE, priority: 10_000_000, action: { type: 'allowAllRequests' }, condition: { requestDomains: down, resourceTypes: ['main_frame', 'sub_frame'] } }]
-      : [],
-  })
+  const { regexRules = [] } = await chrome.storage.local.get('regexRules')
+  const addRules = settings.enabled ? regexRules.filter(r => aggressive || !r.aggressive).map(r => r.rule) : []
+  if (settings.enabled && down.length) {
+    addRules.push({ id: SHIELDS_DOWN_RULE_BASE, priority: 10_000_000, action: { type: 'allowAllRequests' }, condition: { requestDomains: down, resourceTypes: ['main_frame', 'sub_frame'] } })
+  }
+  const existing = await chrome.declarativeNetRequest.getDynamicRules()
+  await chrome.declarativeNetRequest.updateDynamicRules({ removeRuleIds: existing.map(r => r.id), addRules })
   await registerScriptlets(settings, down)
+  await applyCookieSetting(settings)
 }
 
-// ---- regex rules (must be validated at runtime; installed as dynamic rules) ------------------
-async function installRegexRules () {
+// ---- cross-site cookies (opt-in; Brave blocks them by default) -------------------------------
+// Uses the optional `privacy` permission, requested from the popup. Clearing our value hands the
+// setting back to the user's own Chrome preference (also happens automatically on uninstall).
+async function applyCookieSetting (settings) {
+  if (!(await chrome.permissions.contains({ permissions: ['privacy'] }))) return
+  const pref = chrome.privacy.websites.thirdPartyCookiesAllowed
+  if (settings.enabled && settings.blockCrossSiteCookies) await pref.set({ value: false })
+  else await pref.clear({})
+}
+
+// ---- regex rules (validated at runtime against Chrome's RE2 limits) --------------------------
+// Each rule carries `alternatives`: the original regex first, then build-time rewrites
+// (scripts/regex-alternatives.mjs). We keep the first alternative Chrome accepts; split rewrites
+// become several rules. The result is stored and applied per mode by applySettings().
+async function prepareRegexRules () {
   const rules = await fetch(BUILD + 'rules/regex.json').then(r => r.json())
-  const ok = []
+  const supported = async (re, cs) => (await chrome.declarativeNetRequest.isRegexSupported({ regex: re, isCaseSensitive: cs })).isSupported
+  const out = []
+  let rewritten = 0
+  let nextId = 1_000_000
   for (const r of rules) {
-    if (ok.length >= chrome.declarativeNetRequest.MAX_NUMBER_OF_REGEX_RULES - 50) break
-    const res = await chrome.declarativeNetRequest.isRegexSupported({ regex: r.condition.regexFilter, isCaseSensitive: !!r.condition.isUrlFilterCaseSensitive })
-    if (res.isSupported) {
-      const { group, ...rule } = r
-      ok.push(rule)
+    if (out.length >= chrome.declarativeNetRequest.MAX_NUMBER_OF_REGEX_RULES - 50) break
+    const { group, aggressive, alternatives = [[r.condition.regexFilter]], id, ...rule } = r
+    const cs = !!rule.condition.isUrlFilterCaseSensitive
+    for (const [i, alt] of alternatives.entries()) {
+      let ok = true
+      for (const re of alt) if (!(await supported(re, cs))) { ok = false; break }
+      if (!ok) continue
+      if (i > 0) rewritten++
+      for (const re of alt) {
+        out.push({ aggressive: !!aggressive, rule: { ...rule, id: nextId++, condition: { ...rule.condition, regexFilter: re } } })
+      }
+      break
     }
   }
-  const existing = (await chrome.declarativeNetRequest.getDynamicRules()).filter(r => r.id < SHIELDS_DOWN_RULE_BASE)
-  await chrome.declarativeNetRequest.updateDynamicRules({ removeRuleIds: existing.map(r => r.id), addRules: ok })
-  console.log(`[shields] ${ok.length}/${rules.length} regex rules installed`)
+  await chrome.storage.local.set({ regexRules: out })
+  const kept = new Set(out.map(o => o.rule.priority + o.rule.condition.regexFilter)).size
+  console.log(`[shields] regex: ${out.length} rules from ${rules.length} filters (${rewritten} via rewrites, ${kept} distinct)`)
 }
 
 // ---- cosmetic data → storage.local -----------------------------------------------------------
@@ -118,7 +143,7 @@ async function registerScriptlets (settings, down) {
 chrome.runtime.onInstalled.addListener(async () => {
   const { settings } = await chrome.storage.local.get('settings')
   if (!settings) await chrome.storage.local.set({ settings: DEFAULT_SETTINGS })
-  await Promise.all([installCosmeticData(), installRegexRules()])
+  await Promise.all([installCosmeticData(), prepareRegexRules()])
   await applySettings()
   chrome.declarativeNetRequest.setExtensionActionOptions({ displayActionCountAsBadgeText: true })
   if (!isStoreInstall()) {

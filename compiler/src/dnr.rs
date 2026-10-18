@@ -42,11 +42,18 @@ pub struct GroupRules {
     pub aggressive: Vec<Value>,
     /// Regex rules; must be installed as dynamic rules after `isRegexSupported()` checks.
     pub regex: Vec<Value>,
+    /// Regex rules only active in Aggressive mode.
+    pub regex_aggressive: Vec<Value>,
 }
 
 pub struct Converter<'r> {
     /// Maps every redirect resource name and alias to its canonical file name.
     pub redirect_aliases: &'r HashMap<String, String>,
+    /// Entity expansion: `label` -> concrete public suffixes (see `entities.rs`), so
+    /// `domain=label.*` becomes `initiatorDomains: [label.com, label.net, ...]`.
+    pub entity_suffixes: HashMap<String, Vec<String>>,
+    /// Filters skipped because of inexpressible domains (raw lines, for diagnostics).
+    pub skipped_entity_lines: Vec<String>,
     /// Canonical redirect resources actually referenced by emitted rules.
     pub used_redirects: BTreeSet<String>,
     pub stats: Stats,
@@ -74,9 +81,9 @@ fn raw_options(raw: &str, is_regex_pattern: bool) -> Vec<(String, Option<String>
         .collect()
 }
 
-/// Splits a `|`-separated domain option into (included, excluded), dropping entity
-/// (`example.*`) and regex domains, which DNR cannot express.
-fn split_domains(value: &str) -> (Vec<String>, Vec<String>, usize) {
+/// Splits a `|`-separated domain option into (included, excluded), expanding entity
+/// (`example.*`) domains through `entities` and dropping regex domains, which DNR cannot express.
+fn split_domains(value: &str, entities: &HashMap<String, Vec<String>>) -> (Vec<String>, Vec<String>, usize) {
     let mut inc = vec![];
     let mut exc = vec![];
     let mut dropped = 0;
@@ -86,7 +93,17 @@ fn split_domains(value: &str) -> (Vec<String>, Vec<String>, usize) {
             None => (false, d),
         };
         let d = d.trim().to_ascii_lowercase();
-        if d.is_empty() || d.ends_with(".*") || d.starts_with('/') || !d.is_ascii() {
+        if let Some(label) = d.strip_suffix(".*") {
+            match entities.get(label) {
+                Some(sufs) if !sufs.is_empty() => {
+                    let target = if neg { &mut exc } else { &mut inc };
+                    target.extend(sufs.iter().map(|s| format!("{label}.{s}")));
+                }
+                _ => dropped += 1,
+            }
+            continue;
+        }
+        if d.is_empty() || d.starts_with('/') || !d.is_ascii() {
             dropped += 1;
             continue;
         }
@@ -207,7 +224,17 @@ fn split_redirect(value: &str) -> (&str, i64) {
 
 impl<'r> Converter<'r> {
     pub fn new(redirect_aliases: &'r HashMap<String, String>) -> Self {
-        Converter { redirect_aliases, used_redirects: BTreeSet::new(), stats: Stats::default() }
+        Self::with_entities(redirect_aliases, HashMap::new())
+    }
+
+    pub fn with_entities(redirect_aliases: &'r HashMap<String, String>, entity_suffixes: HashMap<String, Vec<String>>) -> Self {
+        Converter {
+            redirect_aliases,
+            entity_suffixes,
+            skipped_entity_lines: vec![],
+            used_redirects: BTreeSet::new(),
+            stats: Stats::default(),
+        }
     }
 
     /// Converts one filter. `fpp` = the list group has Brave's `first_party_protections`.
@@ -245,12 +272,12 @@ impl<'r> Converter<'r> {
                 "to" => ("requestDomains", "excludedRequestDomains"),
                 _ => continue,
             };
-            let (inc, exc, dropped) = split_domains(val);
-            if inc.is_empty() && exc.is_empty() && dropped > 0 {
-                return self.stats.skip("only entity/regex domains");
-            }
-            if inc.is_empty() && dropped > 0 && val.split('|').any(|d| !d.starts_with('~')) {
-                // All positive domains were inexpressible; the rule would become too broad.
+            let (inc, exc, dropped) = split_domains(val, &self.entity_suffixes);
+            let all_dropped = inc.is_empty() && exc.is_empty() && dropped > 0;
+            // All positive domains were inexpressible; the rule would become too broad.
+            let pos_dropped = inc.is_empty() && dropped > 0 && val.split('|').any(|d| !d.starts_with('~'));
+            if all_dropped || pos_dropped {
+                self.skipped_entity_lines.push(raw.to_string());
                 return self.stats.skip("only entity/regex domains");
             }
             if !inc.is_empty() {
@@ -308,7 +335,9 @@ impl<'r> Converter<'r> {
         let is_regex = matches!(pat, Pattern::Regex(_));
         let push = |out: &mut GroupRules, rule: Value, aggressive_only: bool| {
             if is_regex {
-                if !aggressive_only {
+                if aggressive_only {
+                    out.regex_aggressive.push(rule);
+                } else {
                     out.regex.push(rule);
                 }
             } else if aggressive_only {
@@ -556,6 +585,35 @@ mod tests {
         let r = convert(r"/^https?:\/\/[a-z]+\.com\/ad/$script", false);
         assert!(r.standard.is_empty());
         assert_eq!(r.regex.len(), 1);
+        // First-party-protected lists: the first-party half goes to the Aggressive regex set.
+        let r = convert(r"/^https?:\/\/[a-z]+\.com\/ad/$script", true);
+        assert_eq!(r.regex.len(), 1);
+        assert_eq!(r.regex_aggressive.len(), 1);
+        assert_eq!(r.regex_aggressive[0]["condition"]["domainType"], json!("firstParty"));
+    }
+
+    #[test]
+    fn entity_domains_expand_to_known_suffixes() {
+        let aliases = HashMap::new();
+        let mut conv = Converter::new(&aliases);
+        conv.entity_suffixes.insert("yts".into(), vec!["mx".into(), "lt".into()]);
+        let mut out = GroupRules::default();
+        let line = "*/script/clock.js$script,domain=yts.*|~m.yts.mx";
+        match parse_filter(line, true, ParseOptions::default()).unwrap() {
+            ParsedLine::Network(f) => conv.convert(&f, false, &mut out),
+            _ => panic!(),
+        }
+        let c = &out.standard[0]["condition"];
+        assert_eq!(c["initiatorDomains"], json!(["yts.mx", "yts.lt"]));
+        assert_eq!(c["excludedInitiatorDomains"], json!(["m.yts.mx"]));
+        // Unknown entity: still skipped rather than broadened.
+        let mut out = GroupRules::default();
+        match parse_filter("/x.js$domain=nosuch.*", true, ParseOptions::default()).unwrap() {
+            ParsedLine::Network(f) => conv.convert(&f, false, &mut out),
+            _ => panic!(),
+        }
+        assert!(out.standard.is_empty());
+        assert_eq!(conv.skipped_entity_lines.len(), 1);
     }
 
     #[test]

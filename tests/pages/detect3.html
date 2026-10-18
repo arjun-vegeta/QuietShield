@@ -1,0 +1,17 @@
+<!doctype html><meta charset="utf-8"><title>redirect variants</title>
+<script>
+window.__r = {}
+const R = window.__r
+const load = (k, src) => new Promise(res => { const s = document.createElement('script'); s.src = src; s.onload = () => { R[k] = 'loaded'; R[k + 'Stack'] = (window.__surStack || '').split('\n')[1]; window.__surStack = ''; res() }; s.onerror = () => { R[k] = 'error'; res() }; document.head.appendChild(s) })
+;(async () => {
+  await load('s0', 'https://shields-3p.example:8443/s0.js')
+  await load('s1', 'https://shields-3p.example:8443/s1.js?data')
+  await load('s2', 'https://shields-3p.example:8443/s2.js?https')
+  await load('s3', 'https://shields-3p.example:8443/s3.js?ext')
+  await load('s4', 'https://shields-3p.example:8443/s4.js?dataInline')
+  setTimeout(() => {
+    R.rt = performance.getEntriesByType('resource').map(e => ({ n: e.name.replace('https://shields-3p.example:8443', '3p').replace('https://shields-test.example:8443', '1p'), st: e.responseStatus, ts: e.transferSize, ct: e.contentType, rs: e.redirectStart, dur: Math.round(e.duration) }))
+    R.done = true
+  }, 500)
+})()
+</script>

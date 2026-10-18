@@ -18,6 +18,17 @@ siteBox.addEventListener('change', () => {
   else settings.sites[site] = { off: true }
   save()
 })
+const cookiesBox = document.getElementById('cookies')
+cookiesBox.checked = !!settings.blockCrossSiteCookies
+cookiesBox.addEventListener('change', async () => {
+  if (cookiesBox.checked) {
+    // Optional permission: requested only when the user opts in (needs this click as the gesture).
+    const granted = await chrome.permissions.request({ permissions: ['privacy'] })
+    if (!granted) { cookiesBox.checked = false; return }
+  }
+  settings.blockCrossSiteCookies = cookiesBox.checked
+  save()
+})
 for (const r of document.querySelectorAll('input[name=mode]')) {
   r.addEventListener('change', () => { settings.mode = r.value; save() })
 }

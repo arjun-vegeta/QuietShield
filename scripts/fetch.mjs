@@ -36,6 +36,14 @@ for (const entry of wanted) {
 
 writeFileSync(path.join(data, 'brave-resources.json'), await get(BRAVE_RESOURCES_URL))
 
+// AdGuard cname-trackers (MIT): first-party subdomains that CNAME to trackers. Brave uncloaks these
+// with DNS lookups; extensions can't, so we compile the known ones into rules (scripts/build-cname.mjs).
+mkdirSync(path.join(data, 'cname-trackers'), { recursive: true })
+for (const cat of ['trackers', 'ads', 'clickthroughs', 'microsites', 'mail_trackers']) {
+  const url = `https://raw.githubusercontent.com/AdguardTeam/cname-trackers/master/data/combined_disguised_${cat}.json`
+  writeFileSync(path.join(data, 'cname-trackers', `${cat}.json`), await get(url))
+}
+
 // adblock-rust, pinned to the commit this project was verified against (crate 0.13.3).
 const ADBLOCK_RUST_COMMIT = '6028a6d5735f1e81346eeef73c194c7240035248'
 const abr = path.join(root, 'vendor', 'adblock-rust')

@@ -1,0 +1,20 @@
+<!doctype html><meta charset="utf-8"><title>rt checks</title>
+<script>
+window.__r = {}
+const s = document.createElement('script'); s.src = 'https://securepubads.g.doubleclick.net/tag/js/gpt.js'; document.head.appendChild(s)
+const po = []; new PerformanceObserver(l => po.push(...l.getEntries().map(e => e.name))).observe({ type: 'resource', buffered: true })
+setTimeout(() => {
+  const R = window.__r, e = performance.getEntriesByType('resource').find(x => x.name.includes('gpt.js'))
+  R.naive = !!e
+  R.status = e && e.responseStatus
+  R.po = po.some(n => n.includes('gpt.js'))
+  try { R.brand = Object.getOwnPropertyDescriptor(PerformanceEntry.prototype, 'name').get.call(e) === e.name } catch (x) { R.brand = 'throws' }
+  try { R.json = JSON.stringify(e).includes('gpt.js') } catch (x) { R.json = 'throws' }
+  R.ownProps = e ? Object.getOwnPropertyNames(e).length : null
+  R.toStringNative = /\[native code\]/.test(Function.prototype.toString.call(performance.getEntriesByType)) && /\[native code\]/.test(Function.prototype.toString.call(Object.getOwnPropertyDescriptor(PerformanceEntry.prototype, 'name').get))
+  const f = document.createElement('iframe'); document.body.appendChild(f)
+  try { R.crossRealmGetter = f.contentWindow.Object.getOwnPropertyDescriptor(f.contentWindow.PerformanceEntry.prototype, 'name').get.call(e) } catch (x) { R.crossRealmGetter = 'throws' }
+  R.crossRealmToString = /\[native code\]/.test(f.contentWindow.Function.prototype.toString.call(performance.getEntriesByType))
+  R.done = true
+}, 2500)
+</script><body></body>
