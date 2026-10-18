@@ -10,10 +10,48 @@ const data = path.join(root, 'data')
 const CATALOG_URL = 'https://raw.githubusercontent.com/brave/adblock-resources/master/filter_lists/list_catalog.json'
 const BRAVE_RESOURCES_URL = 'https://raw.githubusercontent.com/brave/adblock-resources/master/dist/resources.json'
 
+// Official mirrors for list hosts that occasionally time out from CI runners.
+const MIRRORS = {
+  'https://malware-filter.gitlab.io/malware-filter/': [
+    'https://curbengh.github.io/malware-filter/',
+    'https://malware-filter.pages.dev/',
+  ],
+}
+
+const sleep = (ms) => new Promise(r => setTimeout(r, ms))
+
+async function fetchText (url, attempts = 3) {
+  let lastError
+  for (let i = 0; i < attempts; i++) {
+    try {
+      const res = await fetch(url, { signal: AbortSignal.timeout(30_000) })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      return await res.text()
+    } catch (e) {
+      lastError = e
+      if (i < attempts - 1) await sleep(2000 * (i + 1))
+    }
+  }
+  throw new Error(`${url}: ${lastError?.cause?.code ?? lastError?.message}`)
+}
+
+// Retries each URL, then tries known mirrors before failing the build.
 async function get (url) {
-  const res = await fetch(url)
-  if (!res.ok) throw new Error(`${res.status} ${url}`)
-  return res.text()
+  const candidates = [url]
+  for (const [prefix, mirrors] of Object.entries(MIRRORS)) {
+    if (url.startsWith(prefix)) candidates.push(...mirrors.map(m => m + url.slice(prefix.length)))
+  }
+  const errors = []
+  for (const candidate of candidates) {
+    try {
+      const text = await fetchText(candidate)
+      if (candidate !== url) console.warn(`  used mirror ${candidate}`)
+      return text
+    } catch (e) {
+      errors.push(e.message)
+    }
+  }
+  throw new Error(`download failed:\n  ${errors.join('\n  ')}`)
 }
 
 mkdirSync(path.join(data, 'lists'), { recursive: true })

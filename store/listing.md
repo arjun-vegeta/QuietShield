@@ -16,6 +16,7 @@ QuietShield blocks ads, trackers, cookie banners and anti-adblock walls, while s
 • Turn it off for any site with one click
 • No accounts, no analytics, no data collection. Everything runs locally in your browser.
 
+Website: https://quietshield.arjunr.dev
 Open source: https://github.com/arjun-vegeta/QuietShield
 
 QuietShield is an independent project and is not affiliated with or endorsed by Brave Software. "Brave" is a trademark of Brave Software, Inc.
