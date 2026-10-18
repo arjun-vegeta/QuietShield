@@ -1,9 +1,10 @@
-data/
+/data
 compiler/target/
 extension/build/
-node_modules/
+/node_modules
 *.log
 tests/out/
 engine-wasm/target/
-/vendor/
+/vendor
 extension/_metadata/
+dist/

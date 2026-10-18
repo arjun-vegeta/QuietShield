@@ -4,9 +4,11 @@
   "type": "module",
   "scripts": {
     "fetch": "node scripts/fetch.mjs",
-    "build": "node scripts/build.mjs"
+    "build": "node scripts/build.mjs",
+    "package": "node scripts/package.mjs"
   },
   "devDependencies": {
     "esbuild": "0.25.10"
-  }
+  },
+  "license": "GPL-3.0-or-later"
 }
