@@ -73,7 +73,7 @@
   .meta { margin-top: 18px; font-size: 13px; color: var(--ink-3); }
 
   /* Hero visual: popup mock */
-  .visual { position: relative; display: grid; place-items: center; min-height: 420px; overflow-x: clip; }
+  .visual { position: relative; display: grid; place-items: center; min-height: 420px; }
   .visual .halo { position: absolute; width: 340px; height: 340px; border-radius: 50%; background: radial-gradient(circle, rgba(75, 92, 240, .18), transparent 65%); }
   .popup { position: relative; width: min(300px, 100%); background: rgba(255, 255, 255, .86); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid rgba(255, 255, 255, .9); border-radius: 22px; box-shadow: 0 30px 60px -20px rgba(14, 16, 32, .25), 0 0 0 1px var(--line); padding: 22px; }
   .popup-head { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
@@ -91,8 +91,8 @@
   .count span { font-size: 13px; color: var(--ink-3); }
   .chip { position: absolute; white-space: nowrap; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 10px 14px; font-size: 13px; color: var(--ink-2); box-shadow: var(--shadow); display: flex; align-items: center; gap: 8px; }
   .chip i { width: 8px; height: 8px; border-radius: 50%; background: #3cc28a; display: inline-block; }
-  .chip.a { top: 18px; left: -8px; z-index: 2; }
-  .chip.b { bottom: 30px; right: -6px; z-index: 2; }
+  .chip.a { top: 18px; left: 4px; z-index: 2; }
+  .chip.b { bottom: 30px; right: 4px; z-index: 2; }
 
   /* Stats */
   .stats { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
