@@ -8,7 +8,7 @@ filter lists, and ports of Brave's cosmetic-filtering scripts.
 
 ## Install
 
-**[Step-by-step install guide](https://arjun-vegeta.github.io/QuietShield/)** — about a minute:
+**[Step-by-step install guide](https://quietshield.arjunr.dev/)** — about a minute:
 
 1. Download [`quietshield.zip`](https://github.com/arjun-vegeta/QuietShield/releases/latest/download/quietshield.zip) and unzip it.
 2. Open `chrome://extensions` and turn on **Developer mode**.

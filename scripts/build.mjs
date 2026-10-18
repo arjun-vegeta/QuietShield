@@ -45,7 +45,7 @@ const manifest = {
   host_permissions: ['<all_urls>'],
   background: { service_worker: 'build/background.js', type: 'module' },
   content_security_policy: { extension_pages: "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';" },
-  homepage_url: 'https://github.com/arjun-vegeta/QuietShield',
+  homepage_url: 'https://quietshield.arjunr.dev/',
   icons: { 16: 'icons/icon-16.png', 32: 'icons/icon-32.png', 48: 'icons/icon-48.png', 128: 'icons/icon-128.png' },
   action: {
     default_popup: 'popup/popup.html',
